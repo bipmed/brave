@@ -9,51 +9,66 @@
 
 <div class="container">
     <div class="row">
-        <form id="search-form">
-            <div class="form-group">
-                <label class="sr-only" for="datasetId">Dataset ID</label>
-                <select name="datasetId" id="datasetId" class="form-control">
-                    <option value="" selected>Any dataset</option>
-                    <option value="bipmed-wes-phase2">bipmed-wes-phase2</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="sr-only" for="assemblyId">Assembly ID</label>
-                <select name="assemblyId" id="assemblyId" class="form-control">
-                    <option value="" selected>Any assembly</option>
-                    <option value="hg19">hg19</option>
-                    <option value="GRCh38">GRCh38</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="sr-only" for="query">Query</label>
-                <input type="text" name="query" id="query" class="form-control"
-                       placeholder="Gene symbol (SCN1A), genomic range (1:1000-2000), genomic position (1:1000) or SNPdb ID (rs6054257)">
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Search</button>
-            </div>
-        </form>
+        <div class="col-md-12 col-xs-12">
+            <form id="search-form">
+                <div class="form-group">
+                    <label class="sr-only" for="datasetId">Dataset ID</label>
+                    <select name="datasetId" id="datasetId" class="form-control">
+                        <option value="" selected>Any dataset</option>
+                        <option value="bipmed-wes-phase2">bipmed-wes-phase2</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="assemblyId">Assembly ID</label>
+                    <select name="assemblyId" id="assemblyId" class="form-control">
+                        <option value="" selected>Any assembly</option>
+                        <option value="hg19">hg19</option>
+                        <option value="GRCh38">GRCh38</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="query">Query</label>
+                    <input type="text" name="query" id="query" class="form-control"
+                           placeholder="Gene symbol (SCN1A), genomic range (1:1000-2000), genomic position (1:1000) or SNPdb ID (rs6054257)">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="row table-responsive">
-        <table id="result-table" class="table table-bordered table-hover" hidden="hidden">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Gene Symbol</th>
-                <th>Chromosome</th>
-                <th>Position</th>
-                <th>Reference Bases</th>
-                <th>Alternate Bases</th>
-                <th>Samples</th>
-                <th>Frequency</th>
-                <th>Dataset</th>
-                <th>Assembly</th>
-            </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <span id="error" class="alert alert-danger" hidden="hidden">Invalid query.</span>
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <div id="error-message" hidden="hidden">
+                <span class="alert alert-danger" >Invalid query.</span>
+            </div>
+            <div id="search-message"  hidden="hidden">
+                <span class="alert alert-info">Searching..</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <div class="row table-responsive">
+                <table id="result-table" class="table table-bordered table-hover" hidden="hidden">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Gene Symbol</th>
+                        <th>Chromosome</th>
+                        <th>Position</th>
+                        <th>Reference Bases</th>
+                        <th>Alternate Bases</th>
+                        <th>Samples</th>
+                        <th>Frequency</th>
+                        <th>Dataset</th>
+                        <th>Assembly</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div style="text-align: right;">
@@ -70,7 +85,7 @@
             const query = e.currentTarget.query.value;
 
             if (query === "") {
-                $("#error").show();
+                $("#error-message").show();
                 return;
             }
 
@@ -98,11 +113,12 @@
             } else if (/^\s*([A-Za-z0-9]+)\s*$/.test(query)) {
                 data.geneSymbol = /^\s*([A-Za-z0-9]+)\s*$/.exec(query)[1].toUpperCase();
             } else {
-                $("#error").show();
+                $("#error-message").show();
                 return;
             }
 
-            $("#error").hide();
+            $("#error-message").hide();
+            $("#search-message").show();
 
             $.ajax({
                 url: "https://bcbcloud.fcm.unicamp.br/bipmed",
@@ -130,9 +146,11 @@
                 } else {
                     $("#result-table tbody").html('<tr><td colspan="10" align="center">No variant found.</td></tr>');
                 }
+                $("#search-message").hide();
                 $("#result-table").show();
             }).error(function () {
-                $("#error").show()
+                $("#search-message").hide();
+                $("#error-message").show()
             });
         });
     })
