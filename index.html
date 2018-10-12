@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
+    <script type="text/javascript" src="DataTables/datatables.min.js"></script>
     <title>BIPMed Search</title>
 </head>
 <body>
@@ -40,34 +41,32 @@
     <div class="row">
         <div class="col-md-12 col-xs-12">
             <div id="error-message" hidden="hidden">
-                <span class="alert alert-danger" >Invalid query.</span>
+                <span class="alert alert-danger">Invalid query.</span>
             </div>
-            <div id="search-message"  hidden="hidden">
+            <div id="search-message" hidden="hidden">
                 <span class="alert alert-info">Searching..</span>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12 col-xs-12">
-            <div class="row table-responsive">
-                <table id="result-table" class="table table-bordered table-hover" hidden="hidden">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Gene Symbol</th>
-                        <th>Chromosome</th>
-                        <th>Position</th>
-                        <th>Reference Bases</th>
-                        <th>Alternate Bases</th>
-                        <th>Samples</th>
-                        <th>Frequency</th>
-                        <th>Dataset</th>
-                        <th>Assembly</th>
-                    </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
+            <table id="result-table" class="table table-striped table-bordered" hidden="hidden">
+                <thead>
+                <tr>
+                    <th>dbSNP</th>
+                    <th>Gene Symbol</th>
+                    <th>Chromosome</th>
+                    <th>Position</th>
+                    <th>Reference Bases</th>
+                    <th>Alternate Bases</th>
+                    <th>Samples</th>
+                    <th>Frequency</th>
+                    <th>Dataset</th>
+                    <th>Assembly</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
     <div class="row">
@@ -76,8 +75,6 @@
         </div>
     </div>
 </div>
-
-<script src="js/jquery.min.js"></script>
 <script>
     $(function () {
         $("#search-form").submit(function (e) {
@@ -125,32 +122,40 @@
                 type: "POST",
                 data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
-                dataType: "json"
-            }).done(function (result) {
-                if (result.variants.length > 0) {
-                    $("#result-table tbody").html("");
-                    $.each(result.variants, function (i, item) {
-                        $('<tr>').append(
-                            $('<td>').text(item.variantId),
-                            $('<td>').text(item.geneSymbol),
-                            $('<td>').text(item.referenceName),
-                            $('<td>').text(item.start),
-                            $('<td>').text(item.referenceBases),
-                            $('<td>').text(item.alternateBases),
-                            $('<td>').text(item.sampleCount),
-                            $('<td>').text(item.alleleFrequency),
-                            $('<td>').text(item.datasetId),
-                            $('<td>').text(item.assemblyId),
-                        ).appendTo("#result-table");
-                    });
-                } else {
-                    $("#result-table tbody").html('<tr><td colspan="10" align="center">No variant found.</td></tr>');
+                dataType: "json",
+                success: function (result) {
+                    if (result.variants.length > 0) {
+                        console.log(result.variants)
+                        $('#result-table').DataTable({
+                            data: result.variants,
+                            columnDefs: [{
+                                defaultContent: "-",
+                                targets: "_all"
+                            }],
+                            columns: [
+                                {data: 'variantIds'},
+                                {data: 'geneSymbol'},
+                                {data: 'referenceName'},
+                                {data: 'start'},
+                                {data: 'referenceBases'},
+                                {data: 'alternateBases'},
+                                {data: 'sampleCount'},
+                                {data: 'alleleFrequency'},
+                                {data: 'datasetId'},
+                                {data: 'assemblyId'}
+                            ],
+                            language: {
+                                emptyTable: "No variant found."
+                            }
+                        });
+                    }
+                    $("#search-message").hide();
+                    $("#result-table").show();
+                },
+                error: function () {
+                    $("#search-message").hide();
+                    $("#error-message").show();
                 }
-                $("#search-message").hide();
-                $("#result-table").show();
-            }).error(function () {
-                $("#search-message").hide();
-                $("#error-message").show()
             });
         });
     })
