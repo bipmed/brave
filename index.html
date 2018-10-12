@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <title>BIPMed Search</title>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <form id="search-form">
+            <div class="form-group">
+                <label class="sr-only" for="datasetId">Dataset ID</label>
+                <select name="datasetId" id="datasetId" class="form-control">
+                    <option value="" selected>Any dataset</option>
+                    <option value="bipmed-wes-phase2">bipmed-wes-phase2</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="assemblyId">Assembly ID</label>
+                <select name="assemblyId" id="assemblyId" class="form-control">
+                    <option value="" selected>Any assembly</option>
+                    <option value="hg19">hg19</option>
+                    <option value="GRCh38">GRCh38</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="query">Query</label>
+                <input type="text" name="query" id="query" class="form-control"
+                       placeholder="Gene symbol (SCN1A), genomic range (1:1000-2000), genomic position (1:1000) or SNPdb ID (rs6054257)">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+    </div>
+    <div class="row table-responsive">
+        <table id="result-table" class="table table-bordered table-hover" hidden="hidden">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Gene Symbol</th>
+                <th>Chromosome</th>
+                <th>Position</th>
+                <th>Reference Bases</th>
+                <th>Alternate Bases</th>
+                <th>Samples</th>
+                <th>Frequency</th>
+                <th>Dataset</th>
+                <th>Assembly</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <span id="error" class="alert alert-danger" hidden="hidden">Invalid query.</span>
+    </div>
+    <div class="row">
+        <div style="text-align: right;">
+            <a target="_blank" href="https://github.com/bipmed/bipmed-search/issues/new">Report issue</a>
+        </div>
+    </div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script>
+    $(function () {
+        $("#search-form").submit(function (e) {
+            e.preventDefault();
+            const query = e.currentTarget.query.value;
+
+            if (query === "") {
+                $("#error").show();
+                return;
+            }
+
+            let data = {};
+
+            if (e.currentTarget.datasetId.value !== "") {
+                data.datasetId = e.currentTarget.datasetId.value
+            }
+
+            if (e.currentTarget.assemblyId.value !== "") {
+                data.assemblyId = e.currentTarget.assemblyId.value
+            }
+
+            if (/^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*-\s*(\d+)\s*$/.test(query)) {
+                const regexResult = /^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*-\s*(\d+)\s*$/.exec(query);
+                data.referenceName = regexResult[1];
+                data.start = regexResult[2];
+                data.end = regexResult[3];
+            } else if (/^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*$/.test(query)) {
+                const regexResult = /^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*$/.exec(query);
+                data.referenceName = regexResult[1];
+                data.start = regexResult[2];
+            } else if (/^\s*(rs\d+)\s*$/.test(query)) {
+                data.variantId = /^\s*(rs\d+)\s*$/.exec(query)[1];
+            } else if (/^\s*([A-Za-z0-9]+)\s*$/.test(query)) {
+                data.geneSymbol = /^\s*([A-Za-z0-9]+)\s*$/.exec(query)[1];
+            } else {
+                $("#error").show();
+                return;
+            }
+
+            $("#error").hide();
+
+            $.ajax({
+                url: "https://bcbcloud.fcm.unicamp.br/bipmed",
+                type: "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json"
+            }).done(function (result) {
+                if (result.variants.length > 0) {
+                    $("#result-table tbody").html("");
+                    $.each(result.variants, function (i, item) {
+                        $('<tr>').append(
+                            $('<td>').text(item.variantId),
+                            $('<td>').text(item.geneSymbol),
+                            $('<td>').text(item.referenceName),
+                            $('<td>').text(item.start),
+                            $('<td>').text(item.referenceBases),
+                            $('<td>').text(item.alternateBases),
+                            $('<td>').text(item.sampleCount),
+                            $('<td>').text(item.alleleFrequency),
+                            $('<td>').text(item.datasetId),
+                            $('<td>').text(item.assemblyId),
+                        ).appendTo("#result-table");
+                    });
+                } else {
+                    $("#result-table tbody").html('<tr><td colspan="10" align="center">No variant found.</td></tr>');
+                }
+                $("#result-table").show();
+            }).error(function () {
+                $("#error").show()
+            });
+        });
+    })
+</script>
+
+</body>
+</html>
