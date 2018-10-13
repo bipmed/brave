@@ -28,7 +28,7 @@
                 <label class="sr-only" for="query">Query</label>
                 <input type="text" name="query" id="query" class="form-control"
                        placeholder="Gene symbol (SCN1A), genomic range (1:1000-2000), genomic position (1:1000) or SNPdb ID (rs6054257)"
-                        value="">
+                       value="">
                 <div class="input-group-append">
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
@@ -136,8 +136,13 @@
                     },
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
-                    dataSrc: function ( result ) {
-                        return result.variants;
+                    dataSrc: function (result) {
+                        const variants = result.variants;
+                        for (let i = 0; i < variants.length; i++) {
+                            const variantId = variants[i].variantIds;
+                            variants[i].variantIds = '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/snp/' + variantId + '">' + variantId + "</a>";
+                        }
+                        return variants;
                     }, error: function (error) {
                         console.log(error);
                     }
@@ -147,12 +152,7 @@
                     targets: "_all"
                 }],
                 columns: [
-                    {
-                        data: 'variantIds',
-                        fnCreatedCell: function (nTd, sData, oData) {
-                            $(nTd).html('<a target="_blank" href="https://www.ncbi.nlm.nih.gov/snp/' + oData.variantIds + '">' + oData.variantIds + "</a>");
-                        }
-                    },
+                    {data: 'variantIds'},
                     {data: 'geneSymbol'},
                     {data: 'referenceName'},
                     {data: 'start'},
@@ -181,7 +181,7 @@
                     {data: 'assemblyId'}
                 ],
                 language: {
-                    emptyTable: "No variant found."
+                    zeroRecords: "No variant found."
                 },
                 bDestroy: true
             });
