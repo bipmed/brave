@@ -15,77 +15,60 @@
             BIPMed
         </a>
     </nav>
-    <form id="search-form" class="form-inline">
-        <label class="sr-only" for="query">Query</label>
+</nav>
+<br/>
+<div class="container">
+    <div class="input-group">
         <input type="text" name="query" id="query" class="form-control"
                placeholder="Gene symbol (SCN1A), genomic range (1:1000-2000), genomic position (1:1000) or SNPdb ID (rs6054257)"
-               autofocus>
-        <button type="submit" class="btn btn-primary">Search</button>
-    </form>
-</nav>
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12 col-xs-12">
-            <div id="error-message" class="alert alert-danger" hidden="hidden">
-                Invalid query.
-            </div>
+               aria-label="Query" autofocus>
+        <div class="input-group-append">
+            <button type="button" class="btn btn-primary" id="search-button">Search Variants</button>
         </div>
     </div>
-    <div class="row">
-        <div class="table-responsive">
-            <table id="result-table" class="table table-striped table-bordered table-hove">
-                <thead>
-                <tr>
-                    <th>dbSNP</th>
-                    <th>Gene Symbol</th>
-                    <th>Chromosome</th>
-                    <th>Position</th>
-                    <th>Reference Bases</th>
-                    <th>Alternate Bases</th>
-                    <th>Samples</th>
-                    <th>Frequency</th>
+</div>
+<br/>
+<div class="container-fluid">
+    <div class="table-responsive">
+        <table id="result-table" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>dbSNP</th>
+                <th>Gene Symbol</th>
+                <th>Chromosome</th>
+                <th>Position</th>
+                <th>Reference Bases</th>
+                <th>Alternate Bases</th>
+                <th>Samples</th>
+                <th>Frequency</th>
 
-                    <th>Clinical Significance</th>
+                <th>Clinical Significance</th>
 
-                    <th>Min Coverage</th>
-                    <th>q25 Coverage</th>
-                    <th>Meadian Coverage</th>
-                    <th>q75 Coverage</th>
-                    <th>Max Coverage</th>
-                    <th>Mean Coverage</th>
+                <th>Coverage</th>
+                <th>Genotype Quality</th>
 
-                    <th>Min Genotype Quality</th>
-                    <th>q25 Genotype Quality</th>
-                    <th>Meadian Genotype Quality</th>
-                    <th>q75 Genotype Quality</th>
-                    <th>Max Genotype Quality</th>
-                    <th>Mean Genotype Quality</th>
-
-                    <th>Dataset</th>
-                    <th>Assembly</th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
+                <th>Dataset</th>
+                <th>Assembly</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
 </div>
 
 <nav class="navbar fixed-bottom navbar-light bg-light">
+    &copy; 2018 Benilton Carvalho &amp; Welliton Souza
     <a target="_blank" href="https://github.com/bipmed/bipmed-search/issues/new">Report issue</a>
 </nav>
 
 <script>
     $(function () {
-        $("#search-form").submit(function (e) {
-            e.preventDefault();
-            const query = e.currentTarget.query.value;
-
-            if (query === "") {
-                $("#error-message").show();
-                return;
-            }
+        $('#query').keypress(function (e) {
+            if (e.keyCode === 13)
+                $('#search-button').click();
+        });
+        $("#search-button").click(function () {
+            const query = $("#query").val();
 
             let data = {};
 
@@ -103,11 +86,8 @@
             } else if (/^\s*([A-Za-z0-9]+)\s*$/.test(query)) {
                 data.geneSymbol = /^\s*([A-Za-z0-9]+)\s*$/.exec(query)[1].toUpperCase();
             } else {
-                $("#error-message").show();
                 return;
             }
-
-            $("#error-message").hide();
 
             $('#result-table').DataTable({
                 processing: true,
@@ -125,6 +105,8 @@
                         for (let i = 0; i < variants.length; i++) {
                             const variantId = variants[i].variantIds;
                             variants[i].variantIds = '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/snp/' + variantId + '">' + variantId + "</a>";
+                            variants[i].coverage = [variants[i].minCov, variants[i].q25Cov, variants[i].medianCov, variants[i].q75Cov, variants[i].maxCov, variants[i].meanCov];
+                            variants[i].genQual = [variants[i].minGenQual, variants[i].q25GenQual, variants[i].medianGenQual, variants[i].q75GenQual, variants[i].maxGenQual, variants[i].meanGenQual];
                         }
                         return variants;
                     }, error: function (error) {
@@ -146,20 +128,28 @@
                     {data: 'alleleFrequency'},
 
                     {data: 'clnsig'},
-
-                    {data: 'minCov'},
-                    {data: 'q25Cov'},
-                    {data: 'medianCov'},
-                    {data: 'q75Cov'},
-                    {data: 'maxCov'},
-                    {data: 'meanCov'},
-
-                    {data: 'minGenQual'},
-                    {data: 'q25GenQual'},
-                    {data: 'medianGenQual'},
-                    {data: 'q75GenQual'},
-                    {data: 'maxGenQual'},
-                    {data: 'meanGenQual'},
+                    {
+                        data: 'coverage',
+                        mRender: function (data) {
+                            return 'min: ' + data[0] + '<br />' +
+                                'q25: ' + data[1] + '<br />' +
+                                'median: ' + data[2] + '<br />' +
+                                'q75: ' + data[3] + '<br />' +
+                                'max: ' + data[4] + '<br />' +
+                                'mean: ' + data[5].toFixed(2) + '<br />'
+                        },
+                    },
+                    {
+                        data: 'genQual',
+                        mRender: function (data) {
+                            return 'min: ' + data[0] + '<br />' +
+                                'q25: ' + data[1] + '<br />' +
+                                'median: ' + data[2] + '<br />' +
+                                'q75: ' + data[3] + '<br />' +
+                                'max: ' + data[4] + '<br />' +
+                                'mean: ' + data[5].toFixed(2) + '<br />'
+                        },
+                    },
 
                     {data: 'datasetId'},
                     {data: 'assemblyId'}
