@@ -8,33 +8,23 @@
 </head>
 <body>
 
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+            <img src="img/bipmed-logo2.png" class="d-inline-block align-top" alt="">
+            BIPMed
+        </a>
+    </nav>
+    <form id="search-form" class="form-inline">
+        <label class="sr-only" for="query">Query</label>
+        <input type="text" name="query" id="query" class="form-control"
+               placeholder="Gene symbol (SCN1A), genomic range (1:1000-2000), genomic position (1:1000) or SNPdb ID (rs6054257)"
+               autofocus>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</nav>
+
 <div class="container-fluid">
-    <div class="row">
-        <form id="search-form">
-            <div class="input-group mb-4">
-                <div class="input-group-prepend">
-                    <label class="sr-only" for="datasetId">Dataset ID</label>
-                    <select name="datasetId" id="datasetId" class="custom-select">
-                        <option value="" selected>Any dataset</option>
-                        <option value="bipmed-wes-phase2">bipmed-wes-phase2</option>
-                    </select>
-                    <label class="sr-only" for="assemblyId">Assembly ID</label>
-                    <select name="assemblyId" id="assemblyId" class="custom-select">
-                        <option value="" selected>Any assembly</option>
-                        <option value="hg19">hg19</option>
-                        <option value="GRCh38">GRCh38</option>
-                    </select>
-                </div>
-                <label class="sr-only" for="query">Query</label>
-                <input type="text" name="query" id="query" class="form-control"
-                       placeholder="Gene symbol (SCN1A), genomic range (1:1000-2000), genomic position (1:1000) or SNPdb ID (rs6054257)"
-                       value="">
-                <div class="input-group-append">
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </div>
-            </div>
-        </form>
-    </div>
     <div class="row">
         <div class="col-md-12 col-xs-12">
             <div id="error-message" class="alert alert-danger" hidden="hidden">
@@ -43,8 +33,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12 col-xs-12">
-            <table id="result-table" class="table table-striped table-bordered">
+        <div class="table-responsive">
+            <table id="result-table" class="table table-striped table-bordered table-hove">
                 <thead>
                 <tr>
                     <th>dbSNP</th>
@@ -80,10 +70,12 @@
             </table>
         </div>
     </div>
-    <div class="row">
-        <a target="_blank" href="https://github.com/bipmed/bipmed-search/issues/new">Report issue</a>
-    </div>
 </div>
+
+<nav class="navbar fixed-bottom navbar-light bg-light">
+    <a target="_blank" href="https://github.com/bipmed/bipmed-search/issues/new">Report issue</a>
+</nav>
+
 <script>
     $(function () {
         $("#search-form").submit(function (e) {
@@ -96,14 +88,6 @@
             }
 
             let data = {};
-
-            if (e.currentTarget.datasetId.value !== "") {
-                data.datasetId = e.currentTarget.datasetId.value
-            }
-
-            if (e.currentTarget.assemblyId.value !== "") {
-                data.assemblyId = e.currentTarget.assemblyId.value
-            }
 
             if (/^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*-\s*(\d+)\s*$/.test(query)) {
                 const regexResult = /^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*-\s*(\d+)\s*$/.exec(query);
