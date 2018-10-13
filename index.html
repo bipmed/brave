@@ -10,41 +10,34 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-12 col-xs-12">
-            <form id="search-form">
-                <div class="form-group">
+        <form id="search-form">
+            <div class="input-group mb-4">
+                <div class="input-group-prepend">
                     <label class="sr-only" for="datasetId">Dataset ID</label>
-                    <select name="datasetId" id="datasetId" class="form-control">
+                    <select name="datasetId" id="datasetId" class="custom-select">
                         <option value="" selected>Any dataset</option>
                         <option value="bipmed-wes-phase2">bipmed-wes-phase2</option>
                     </select>
-                </div>
-                <div class="form-group">
                     <label class="sr-only" for="assemblyId">Assembly ID</label>
-                    <select name="assemblyId" id="assemblyId" class="form-control">
+                    <select name="assemblyId" id="assemblyId" class="custom-select">
                         <option value="" selected>Any assembly</option>
                         <option value="hg19">hg19</option>
                         <option value="GRCh38">GRCh38</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label class="sr-only" for="query">Query</label>
-                    <input type="text" name="query" id="query" class="form-control"
-                           placeholder="Gene symbol (SCN1A), genomic range (1:1000-2000), genomic position (1:1000) or SNPdb ID (rs6054257)">
-                </div>
-                <div class="form-group">
+                <label class="sr-only" for="query">Query</label>
+                <input type="text" name="query" id="query" class="form-control"
+                       placeholder="Gene symbol (SCN1A), genomic range (1:1000-2000), genomic position (1:1000) or SNPdb ID (rs6054257)">
+                <div class="input-group-append">
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
     <div class="row">
         <div class="col-md-12 col-xs-12">
             <div id="error-message" class="alert alert-danger" hidden="hidden">
                 Invalid query.
-            </div>
-            <div id="search-message" hidden="hidden" class="alert alert-info">
-                Searching..
             </div>
         </div>
     </div>
@@ -87,13 +80,70 @@
         </div>
     </div>
     <div class="row">
-        <div style="text-align: right;">
-            <a target="_blank" href="https://github.com/bipmed/bipmed-search/issues/new">Report issue</a>
-        </div>
+        <a target="_blank" href="https://github.com/bipmed/bipmed-search/issues/new">Report issue</a>
     </div>
 </div>
 <script>
     $(function () {
+        $('#result-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "https://bcbcloud.fcm.unicamp.br/bipmed",
+                type: "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    result.variants
+                }, error: function () {
+                    $("#search-message").hide();
+                    $("#error-message").show();
+                }
+            },
+            columnDefs: [{
+                defaultContent: "-",
+                targets: "_all"
+            }],
+            columns: [
+                {
+                    data: 'variantIds',
+                    fnCreatedCell: function (nTd, sData, oData) {
+                        $(nTd).html('<a target="_blank" href="https://www.ncbi.nlm.nih.gov/snp/' + oData.variantIds + '">' + oData.variantIds + "</a>");
+                    }
+                },
+                {data: 'geneSymbol'},
+                {data: 'referenceName'},
+                {data: 'start'},
+                {data: 'referenceBases'},
+                {data: 'alternateBases'},
+                {data: 'sampleCount'},
+                {data: 'alleleFrequency'},
+
+                {data: 'clnsig'},
+
+                {data: 'minCov'},
+                {data: 'q25Cov'},
+                {data: 'medianCov'},
+                {data: 'q75Cov'},
+                {data: 'maxCov'},
+                {data: 'meanCov'},
+
+                {data: 'minGenQual'},
+                {data: 'q25GenQual'},
+                {data: 'medianGenQual'},
+                {data: 'q75GenQual'},
+                {data: 'maxGenQual'},
+                {data: 'meanGenQual'},
+
+                {data: 'datasetId'},
+                {data: 'assemblyId'}
+            ],
+            language: {
+                emptyTable: "No variant found."
+            }
+        });
+
         $("#search-form").submit(function (e) {
             e.preventDefault();
             const query = e.currentTarget.query.value;
@@ -132,63 +182,6 @@
             }
 
             $("#error-message").hide();
-            $("#search-message").show();
-
-            $.ajax({
-                url: "https://bcbcloud.fcm.unicamp.br/bipmed",
-                type: "POST",
-                data: JSON.stringify(data),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (result) {
-                    console.log(result.variants);
-                    $('#result-table').DataTable({
-                        data: result.variants,
-                        columnDefs: [{
-                            defaultContent: "-",
-                            targets: "_all"
-                        }],
-                        columns: [
-                            {data: 'variantIds'},
-                            {data: 'geneSymbol'},
-                            {data: 'referenceName'},
-                            {data: 'start'},
-                            {data: 'referenceBases'},
-                            {data: 'alternateBases'},
-                            {data: 'sampleCount'},
-                            {data: 'alleleFrequency'},
-
-                            {data: 'clnsig'},
-
-                            {data: 'minCov'},
-                            {data: 'q25Cov'},
-                            {data: 'medianCov'},
-                            {data: 'q75Cov'},
-                            {data: 'maxCov'},
-                            {data: 'meanCov'},
-
-                            {data: 'minGenQual'},
-                            {data: 'q25GenQual'},
-                            {data: 'medianGenQual'},
-                            {data: 'q75GenQual'},
-                            {data: 'maxGenQual'},
-                            {data: 'meanGenQual'},
-
-                            {data: 'datasetId'},
-                            {data: 'assemblyId'}
-                        ],
-                        language: {
-                            emptyTable: "No variant found."
-                        },
-                        bDestroy: true
-                    });
-                    $("#search-message").hide();
-                },
-                error: function () {
-                    $("#search-message").hide();
-                    $("#error-message").show();
-                }
-            });
         });
     })
 </script>
