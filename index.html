@@ -3,165 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
-    <script type="text/javascript" src="DataTables/datatables.min.js"></script>
+    <link rel="stylesheet" href="css/sticky-footer-navbar.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>BIPMed Search</title>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <nav class="navbar navbar-light bg-light">
+<header>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <a class="navbar-brand" href="#">
-            <img src="img/bipmed-logo2.png" class="d-inline-block align-top" alt="">
+            <img src="image/bipmed-logo2.png" class="d-inline-block align-top" alt="">
             BIPMed
         </a>
     </nav>
-</nav>
-<br/>
-<div class="container">
-    <div class="input-group">
-        <input type="text" name="query" id="query" class="form-control"
-               placeholder="Gene symbol (SCN1A), genomic range (1:1000-2000), genomic position (1:1000) or SNPdb ID (rs6054257)"
-               aria-label="Query" autofocus>
-        <div class="input-group-append">
-            <button type="button" class="btn btn-primary" id="search-button">Search Variants</button>
+</header>
+
+<main role="main" class="container-fluid">
+    <div id="search-content" class="row justify-content-md-center">
+        <div class="col-md-10">
+            <div class="input-group input-group-lg">
+                <input type="text" name="query" id="query" class="form-control"
+                       aria-label="Query" value="SCN1A" autofocus>
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-primary" id="search-button">Search Variants</button>
+                </div>
+            </div>
+            <small class="form-text text-muted">
+                Gene symbol (SCN1A), genomic range (1:1000-2000), genomic position (1:1000) or SNPdb ID (rs6054257)
+            </small>
         </div>
     </div>
-</div>
-<br/>
-<div class="container-fluid">
-    <div class="table-responsive">
-        <table id="result-table" class="table table-bordered table-hover">
-            <thead>
-            <tr>
-                <th>dbSNP</th>
-                <th>Gene Symbol</th>
-                <th>Chromosome</th>
-                <th>Position</th>
-                <th>Reference Bases</th>
-                <th>Alternate Bases</th>
-                <th>Samples</th>
-                <th>Frequency</th>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="result-table" class="table table-bordered table-hover nowrap" style="width:100%">
+                <thead>
+                <tr>
+                    <th>dbSNP</th>
+                    <th>Gene</th>
+                    <th>Chromosome</th>
+                    <th>Position</th>
+                    <th>Reference</th>
+                    <th>Alternate</th>
+                    <th>Samples</th>
+                    <th>Frequency</th>
 
-                <th>Clinical Significance</th>
+                    <th>Clinical Significance</th>
 
-                <th>Coverage</th>
-                <th>Genotype Quality</th>
+                    <th>Coverage</th>
+                    <th>Genotype Quality</th>
 
-                <th>Dataset</th>
-                <th>Assembly</th>
-            </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+                    <th>Assembly</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
-</div>
+</main>
 
-<nav class="navbar fixed-bottom navbar-light bg-light">
-    &copy; 2018 Benilton Carvalho &amp; Welliton Souza
-    <a target="_blank" href="https://github.com/bipmed/bipmed-search/issues/new">Report issue</a>
-</nav>
+<footer class="footer">
+    <div class="container">
+        <span class="text-muted">
+            &copy; 2018 Benilton Carvalho &amp; Welliton Souza
+            <a id="issue" target="_blank" href="https://github.com/bipmed/bipmed-search/issues/new">Report issue</a>
+        </span>
+    </div>
+</footer>
 
-<script>
-    $(function () {
-        $('#query').keypress(function (e) {
-            if (e.keyCode === 13)
-                $('#search-button').click();
-        });
-        $("#search-button").click(function () {
-            const query = $("#query").val();
-
-            let data = {};
-
-            if (/^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*-\s*(\d+)\s*$/.test(query)) {
-                const regexResult = /^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*-\s*(\d+)\s*$/.exec(query);
-                data.referenceName = regexResult[1];
-                data.start = regexResult[2];
-                data.end = regexResult[3];
-            } else if (/^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*$/.test(query)) {
-                const regexResult = /^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*$/.exec(query);
-                data.referenceName = regexResult[1];
-                data.start = regexResult[2];
-            } else if (/^\s*(rs\d+)\s*$/.test(query)) {
-                data.variantId = /^\s*(rs\d+)\s*$/.exec(query)[1].toLowerCase();
-            } else if (/^\s*([A-Za-z0-9]+)\s*$/.test(query)) {
-                data.geneSymbol = /^\s*([A-Za-z0-9]+)\s*$/.exec(query)[1].toUpperCase();
-            } else {
-                return;
-            }
-
-            $('#result-table').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: "https://bcbcloud.fcm.unicamp.br/bipmed",
-                    type: "POST",
-                    data: function () {
-                        return JSON.stringify(data);
-                    },
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    dataSrc: function (result) {
-                        const variants = result.variants;
-                        for (let i = 0; i < variants.length; i++) {
-                            const variantId = variants[i].variantIds;
-                            variants[i].variantIds = '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/snp/' + variantId + '">' + variantId + "</a>";
-                            variants[i].coverage = [variants[i].minCov, variants[i].q25Cov, variants[i].medianCov, variants[i].q75Cov, variants[i].maxCov, variants[i].meanCov];
-                            variants[i].genQual = [variants[i].minGenQual, variants[i].q25GenQual, variants[i].medianGenQual, variants[i].q75GenQual, variants[i].maxGenQual, variants[i].meanGenQual];
-                        }
-                        return variants;
-                    }, error: function (error) {
-                        console.log(error);
-                    }
-                },
-                columnDefs: [{
-                    defaultContent: "-",
-                    targets: "_all"
-                }],
-                columns: [
-                    {data: 'variantIds'},
-                    {data: 'geneSymbol'},
-                    {data: 'referenceName'},
-                    {data: 'start'},
-                    {data: 'referenceBases'},
-                    {data: 'alternateBases'},
-                    {data: 'sampleCount'},
-                    {data: 'alleleFrequency'},
-
-                    {data: 'clnsig'},
-                    {
-                        data: 'coverage',
-                        mRender: function (data) {
-                            return 'min: ' + data[0] + '<br />' +
-                                'q25: ' + data[1] + '<br />' +
-                                'median: ' + data[2] + '<br />' +
-                                'q75: ' + data[3] + '<br />' +
-                                'max: ' + data[4] + '<br />' +
-                                'mean: ' + data[5].toFixed(2) + '<br />'
-                        },
-                    },
-                    {
-                        data: 'genQual',
-                        mRender: function (data) {
-                            return 'min: ' + data[0] + '<br />' +
-                                'q25: ' + data[1] + '<br />' +
-                                'median: ' + data[2] + '<br />' +
-                                'q75: ' + data[3] + '<br />' +
-                                'max: ' + data[4] + '<br />' +
-                                'mean: ' + data[5].toFixed(2) + '<br />'
-                        },
-                    },
-
-                    {data: 'datasetId'},
-                    {data: 'assemblyId'}
-                ],
-                language: {
-                    zeroRecords: "No variant found."
-                },
-                bDestroy: true
-            });
-        });
-    })
-</script>
+<script type="text/javascript" src="DataTables/datatables.min.js"></script>
+<script src="js/search.js"></script>
 
 </body>
 </html>
