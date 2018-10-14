@@ -1,5 +1,7 @@
 $(document).ready(function () {
-    var table = $('#result-table').DataTable({
+    $("#query").val($.query.get('query'));
+
+    const table = $('#result-table').DataTable({
         processing: true,
         serverSide: true,
         ajax: {
@@ -23,9 +25,8 @@ $(document).ready(function () {
                     data.variantId = /^\s*(rs\d+)\s*$/.exec(query)[1].toLowerCase();
                 } else if (/^\s*([A-Za-z0-9]+)\s*$/.test(query)) {
                     data.geneSymbol = /^\s*([A-Za-z0-9]+)\s*$/.exec(query)[1].toUpperCase();
-                } else {
-                    return JSON.stringify({});
                 }
+
                 return JSON.stringify(data);
             },
             contentType: "application/json; charset=utf-8",
@@ -39,6 +40,15 @@ $(document).ready(function () {
                     variants[i].genQual = [variants[i].minGenQual, variants[i].q25GenQual, variants[i].medianGenQual, variants[i].q75GenQual, variants[i].maxGenQual, variants[i].meanGenQual].join(', ');
                 }
                 return variants;
+            },
+            beforeSend: function (xhr, opts) {
+                if (opts.data === "{}") {
+                    xhr.abort();
+                    $("div .dataTables_processing").hide();
+                    if ($("#query").val() !== "") {
+                        $("#result-table tbody").html('<tr class="odd"><td valign="top" colspan="11" class="dataTables_empty">Invalid query.</td></tr>');
+                    }
+                }
             }
         },
         columnDefs: [{
@@ -62,7 +72,8 @@ $(document).ready(function () {
             {data: 'assemblyId'}
         ],
         language: {
-            zeroRecords: "No variant found."
+            zeroRecords: "No variant found.",
+            processing: "Searching for variants.."
         },
         bDestroy: true,
         responsive: true,
@@ -74,7 +85,10 @@ $(document).ready(function () {
     new $.fn.dataTable.FixedHeader(table);
 
     $("#search-button").click(function () {
-        table.ajax.reload();
+        if ($("#query").val() !== "") {
+            window.location.search = $.query.set("query", $("#query").val());
+            table.ajax.reload();
+        }
     });
 
     $('#query').keypress(function (e) {

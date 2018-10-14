@@ -9,3 +9,7 @@
 #search-content {
     padding-top: 25px;
 }
+
+div.dataTables_processing {
+    z-index: 1;
+}
