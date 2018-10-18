@@ -4,8 +4,9 @@ $(document).ready(function () {
     const table = $('#result-table').DataTable({
         processing: true,
         serverSide: true,
+        ordering: false,
         ajax: {
-            url: "https://bcbcloud.fcm.unicamp.br/bipmed",
+            url: "https://bcbcloud.fcm.unicamp.br/bipmed/datatables",
             type: "POST",
             data: function () {
                 const query = $("#query").val();
@@ -22,7 +23,7 @@ $(document).ready(function () {
                     data.referenceName = regexResult[1];
                     data.start = regexResult[2];
                 } else if (/^\s*(rs\d+)\s*$/.test(query)) {
-                    data.variantId = /^\s*(rs\d+)\s*$/.exec(query)[1].toLowerCase();
+                    data.snpId = /^\s*(rs\d+)\s*$/.exec(query)[1].toLowerCase();
                 } else if (/^\s*([A-Za-z0-9]+)\s*$/.test(query)) {
                     data.geneSymbol = /^\s*([A-Za-z0-9]+)\s*$/.exec(query)[1].toUpperCase();
                 }
@@ -31,16 +32,6 @@ $(document).ready(function () {
             },
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            dataSrc: function (result) {
-                const variants = result.variants;
-                for (let i = 0; i < variants.length; i++) {
-                    const variantId = variants[i].variantIds;
-                    variants[i].variantIds = '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/snp/' + variantId + '">' + variantId + "</a>";
-                    variants[i].coverage = [variants[i].minCov, variants[i].q25Cov, variants[i].medianCov, variants[i].q75Cov, variants[i].maxCov, variants[i].meanCov].join(', ');
-                    variants[i].genQual = [variants[i].minGenQual, variants[i].q25GenQual, variants[i].medianGenQual, variants[i].q75GenQual, variants[i].maxGenQual, variants[i].meanGenQual].join(', ');
-                }
-                return variants;
-            },
             beforeSend: function (xhr, opts) {
                 if (opts.data === "{}") {
                     xhr.abort();
@@ -56,7 +47,7 @@ $(document).ready(function () {
             targets: "_all"
         }],
         columns: [
-            {data: 'variantIds'},
+            {data: 'snpIds'},
             {data: 'geneSymbol'},
             {data: 'referenceName'},
             {data: 'start'},
@@ -66,8 +57,18 @@ $(document).ready(function () {
             {data: 'alleleFrequency'},
 
             {data: 'clnsig'},
-            {data: 'coverage'},
-            {data: 'genQual'},
+            {
+                data: 'coverage',
+                render: function (data, type, row) {
+                    return `min: ${data.min}, q25: ${data.q25}, median: ${data.median}, q75: ${data.q75}, max: ${data.max}, average: ${data.mean},`;
+                }
+            },
+            {
+                data: 'genotypeQuality',
+                render: function (data, type, row) {
+                    return `min: ${data.min}, q25: ${data.q25}, median: ${data.median}, q75: ${data.q75}, max: ${data.max}, average: ${data.mean}`;
+                }
+            },
 
             {data: 'assemblyId'}
         ],
