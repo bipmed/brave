@@ -38,6 +38,32 @@
             </div>
         </div>
     </form>
+    <div id="result-content" class="row">
+        <div class="col-md-12">
+            <table id="result-table" class="table table-bordered table-hover nowrap" style="width:100%">
+                <thead>
+                <tr>
+                    <th>dbSNP</th>
+                    <th>Gene</th>
+                    <th>Chromosome</th>
+                    <th>Position</th>
+                    <th>Reference</th>
+                    <th>Alternative</th>
+                    <th>Samples</th>
+                    <th>Frequency</th>
+
+                    <th>Clinical Significance</th>
+
+                    <th>Coverage</th>
+                    <th>Genotype Quality</th>
+
+                    <th>Assembly</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
 </main>
 
 <footer class="footer">
@@ -47,6 +73,10 @@
         </span>
     </div>
 </footer>
+
+<script type="text/javascript" src="DataTables/datatables.min.js"></script>
+<script src="js/jquery.query-object.js"></script>
+<script src="js/search.js"></script>
 
 </body>
 </html>

@@ -3,7 +3,10 @@ $(document).ready(function () {
 
     const table = $('#result-table').DataTable({
         serverSide: true,
+        processing: true,
         ordering: false,
+        responsive: true,
+        searching: false,
         ajax: {
             url: "https://bcbcloud.fcm.unicamp.br/bipmed/datatables",
             type: "POST",
@@ -74,23 +77,12 @@ $(document).ready(function () {
             {data: 'assemblyId'}
         ],
         language: {
-            zeroRecords: "No variant found."
-        },
-        responsive: true,
-        searching: false
-    });
-
-    new $.fn.dataTable.FixedHeader(table);
-
-    $("#search-button").click(function () {
-        if ($("#query").val() !== "") {
-            window.location.search = $.query.set("query", $("#query").val());
-            table.ajax.reload();
+            zeroRecords: "No variant found.",
+            processing: "Searching for variants..",
+            info: "Showing _START_ to _END_ of _TOTAL_ variants",
+            infoFiltered: "(filtered from _MAX_ total variants)"
         }
     });
 
-    $('#query').keypress(function (e) {
-        if (e.keyCode === 13)
-            $('#search-button').click();
-    });
+    new $.fn.dataTable.FixedHeader(table);
 });
