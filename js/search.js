@@ -77,10 +77,7 @@ $(document).ready(function () {
             zeroRecords: "No variant found."
         },
         responsive: true,
-        searching: false,
-        initComplete: function () {
-            $("#result-content").css( 'display', 'block' );
-        }
+        searching: false
     });
 
     new $.fn.dataTable.FixedHeader(table);
