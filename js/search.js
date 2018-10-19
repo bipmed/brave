@@ -2,30 +2,31 @@ $(document).ready(function () {
     $("#query").val($.query.get('query'));
 
     const table = $('#result-table').DataTable({
-        processing: true,
         serverSide: true,
         ordering: false,
         ajax: {
             url: "https://bcbcloud.fcm.unicamp.br/bipmed/datatables",
             type: "POST",
-            data: function () {
+            data: function (data) {
                 const query = $("#query").val();
 
-                let data = {};
+                data.query = {};
 
                 if (/^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*-\s*(\d+)\s*$/.test(query)) {
                     const regexResult = /^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*-\s*(\d+)\s*$/.exec(query);
-                    data.referenceName = regexResult[1];
-                    data.start = regexResult[2];
-                    data.end = regexResult[3];
+                    data.query.referenceName = regexResult[1];
+                    data.query.start = regexResult[2];
+                    data.query.end = regexResult[3];
                 } else if (/^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*$/.test(query)) {
                     const regexResult = /^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*$/.exec(query);
-                    data.referenceName = regexResult[1];
-                    data.start = regexResult[2];
+                    data.query.referenceName = regexResult[1];
+                    data.query.start = regexResult[2];
                 } else if (/^\s*(rs\d+)\s*$/.test(query)) {
-                    data.snpId = /^\s*(rs\d+)\s*$/.exec(query)[1].toLowerCase();
+                    data.query.snpId = /^\s*(rs\d+)\s*$/.exec(query)[1].toLowerCase();
                 } else if (/^\s*([A-Za-z0-9]+)\s*$/.test(query)) {
-                    data.geneSymbol = /^\s*([A-Za-z0-9]+)\s*$/.exec(query)[1].toUpperCase();
+                    data.query.geneSymbol = /^\s*([A-Za-z0-9]+)\s*$/.exec(query)[1].toUpperCase();
+                } else {
+                    data = {};
                 }
 
                 return JSON.stringify(data);
@@ -59,13 +60,13 @@ $(document).ready(function () {
             {data: 'clnsig'},
             {
                 data: 'coverage',
-                render: function (data, type, row) {
+                render: function (data) {
                     return `min: ${data.min}, q25: ${data.q25}, median: ${data.median}, q75: ${data.q75}, max: ${data.max}, average: ${data.mean},`;
                 }
             },
             {
                 data: 'genotypeQuality',
-                render: function (data, type, row) {
+                render: function (data) {
                     return `min: ${data.min}, q25: ${data.q25}, median: ${data.median}, q75: ${data.q75}, max: ${data.max}, average: ${data.mean}`;
                 }
             },
@@ -73,14 +74,13 @@ $(document).ready(function () {
             {data: 'assemblyId'}
         ],
         language: {
-            zeroRecords: "No variant found.",
-            processing: "Searching for variants.."
+            zeroRecords: "No variant found."
         },
-        bDestroy: true,
         responsive: true,
-        paging: false,
         searching: false,
-        sDom: "clear"
+        initComplete: function () {
+            $("#result-content").css( 'display', 'block' );
+        }
     });
 
     new $.fn.dataTable.FixedHeader(table);

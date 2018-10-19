@@ -1,15 +1,11 @@
-.row {
-    padding-top: 25px;
-}
-
-#issue {
-    float: right;
-}
-
 #search-content {
     padding-top: 25px;
 }
 
-div.dataTables_processing {
-    z-index: 1;
+#result-content {
+    padding: 25px;
+}
+
+div.container {
+    margin: 0;
 }
