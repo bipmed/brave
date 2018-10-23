@@ -51,12 +51,12 @@ $(document).ready(function () {
             targets: "_all"
         }],
         columns: [
-            {data: 'snpIds'},
-            {data: 'geneSymbol'},
             {data: 'referenceName'},
             {data: 'start'},
             {data: 'referenceBases'},
             {data: 'alternateBases'},
+            {data: 'geneSymbol'},
+            {data: 'snpIds'},
             {data: 'sampleCount'},
             {data: 'alleleFrequency'},
 
