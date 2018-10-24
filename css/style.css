@@ -9,3 +9,49 @@
 div.container {
     margin: 0;
 }
+
+.uncertain-significance {
+    color: white;
+    background-color: gray;
+}
+
+.not-provided {
+    color: black;
+    background-color: lightgray;
+}
+
+.benign {
+    color: white;
+    background-color: #28a745;
+}
+
+.likely-benign {
+    color: white;
+    background-color: lightseagreen;
+}
+
+.likely-pathogenic {
+    color: white;
+    background-color: orange;
+}
+
+.pathogenic {
+    color: white;
+    background-color: orangered;
+}
+
+.drug-response {
+    color: white;
+    background-color: dodgerblue;
+}
+
+.histocompatibility {
+    color: white;
+    background-color: blueviolet;
+}
+
+.other {
+    color: white;
+    background-color: black;
+}
+

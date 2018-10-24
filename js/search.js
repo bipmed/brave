@@ -1,5 +1,33 @@
+function getBadge(value) {
+    switch (value) {
+        case "0":
+            return '<span class="badge badge-pill uncertain-significance">Uncertain significance</span>';
+        case "1":
+            return '<span class="badge badge-pill not-provided">Not provided</span>';
+        case "2":
+            return '<span class="badge badge-pill benign">Benign</span>';
+        case "3"  :
+            return '<span class="badge badge-pill likely-benign">Likely benign</span>';
+        case "4"  :
+            return '<span class="badge badge-pill likely-pathogenic">Likely pathogenic</span>';
+        case "5"  :
+            return '<span class="badge badge-pill pathogenic">Pathogenic</span>';
+        case "6"  :
+            return '<span class="badge badge-pill drug-response">Drug response</span>';
+        case "7"  :
+            return '<span class="badge badge-pill histocompatibility">Histocompatibility</span>';
+        case "255" :
+            return '<span class="badge badge-pill other">Other</span>';
+    }
+    return "";
+}
+
 $(document).ready(function () {
-    $("#query").val($.query.get('query'));
+    const query = $.query.get('query');
+
+    if (query !== true) {
+        $("#query").val(query);
+    }
 
     const table = $('#result-table').DataTable({
         serverSide: true,
@@ -28,23 +56,12 @@ $(document).ready(function () {
                     data.query.snpId = /^\s*(rs\d+)\s*$/.exec(query)[1].toLowerCase();
                 } else if (/^\s*([A-Za-z0-9]+)\s*$/.test(query)) {
                     data.query.geneSymbol = /^\s*([A-Za-z0-9]+)\s*$/.exec(query)[1].toUpperCase();
-                } else {
-                    data = {};
                 }
 
                 return JSON.stringify(data);
             },
             contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            beforeSend: function (xhr, opts) {
-                if (opts.data === "{}") {
-                    xhr.abort();
-                    $("div .dataTables_processing").hide();
-                    if ($("#query").val() !== "") {
-                        $("#result-table tbody").html('<tr class="odd"><td valign="top" colspan="11" class="dataTables_empty">Invalid query.</td></tr>');
-                    }
-                }
-            }
+            dataType: "json"
         },
         columnDefs: [{
             defaultContent: "-",
@@ -58,23 +75,39 @@ $(document).ready(function () {
             {data: 'geneSymbol'},
             {data: 'snpIds'},
             {data: 'sampleCount'},
-            {data: 'alleleFrequency'},
+            {
+                data: 'alleleFrequency',
+                render: function (data) {
+                    return data.map(x => x.toFixed(4));
+                }
+            },
 
-            {data: 'clnsig'},
+            {
+                data: 'clnsig',
+                render: function (data) {
+                    let regex = /(\d+)/;
+                    let res = data;
+                    while (regex.test(res)) {
+                        res = res.replace(regex, getBadge(regex.exec(res)[1]));
+                    }
+                    return res;
+                }
+            },
             {
                 data: 'coverage',
                 render: function (data) {
-                    return `min: ${data.min}, q25: ${data.q25}, median: ${data.median}, q75: ${data.q75}, max: ${data.max}, average: ${data.mean},`;
+                    return `min: ${data.min.toFixed(4)}, q25: ${data.q25.toFixed(4)}, median: ${data.median.toFixed(4)}, q75: ${data.q75.toFixed(4)}, max: ${data.max.toFixed(4)}, average: ${data.mean.toFixed(4)},`;
                 }
             },
             {
                 data: 'genotypeQuality',
                 render: function (data) {
-                    return `min: ${data.min}, q25: ${data.q25}, median: ${data.median}, q75: ${data.q75}, max: ${data.max}, average: ${data.mean}`;
+                    return `min: ${data.min.toFixed(4)}, q25: ${data.q25.toFixed(4)}, median: ${data.median.toFixed(4)}, q75: ${data.q75.toFixed(4)}, max: ${data.max.toFixed(4)}, average: ${data.mean.toFixed(4)}`;
                 }
             },
 
-            {data: 'assemblyId'}
+            {data: 'assemblyId'},
+            {data: 'datasetId'}
         ],
         language: {
             zeroRecords: "No variant found.",
