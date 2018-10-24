@@ -41,22 +41,32 @@ $(document).ready(function () {
             data: function (data) {
                 const query = $("#query").val();
 
-                data.query = {};
+                let queries = [{
+                    referenceName: null,
+                    start: null,
+                    end: null,
+                    snpId: null,
+                    geneSymbol: null
+                }];
 
                 if (/^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*-\s*(\d+)\s*$/.test(query)) {
                     const regexResult = /^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*-\s*(\d+)\s*$/.exec(query);
-                    data.query.referenceName = regexResult[1];
-                    data.query.start = regexResult[2];
-                    data.query.end = regexResult[3];
+                    queries[0].referenceName = regexResult[1];
+                    queries[0].start = regexResult[2];
+                    queries[0].end = regexResult[3];
                 } else if (/^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*$/.test(query)) {
                     const regexResult = /^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*$/.exec(query);
-                    data.query.referenceName = regexResult[1];
-                    data.query.start = regexResult[2];
+                    queries[0].referenceName = regexResult[1];
+                    queries[0].start = regexResult[2];
                 } else if (/^\s*(rs\d+)\s*$/.test(query)) {
-                    data.query.snpId = /^\s*(rs\d+)\s*$/.exec(query)[1].toLowerCase();
+                    queries[0].snpId = /^\s*(rs\d+)\s*$/.exec(query)[1].toLowerCase();
                 } else if (/^\s*([A-Za-z0-9]+)\s*$/.test(query)) {
-                    data.query.geneSymbol = /^\s*([A-Za-z0-9]+)\s*$/.exec(query)[1].toUpperCase();
+                    queries[0].geneSymbol = /^\s*([A-Za-z0-9]+)\s*$/.exec(query)[1].toUpperCase();
+                } else {
+                    return JSON.stringify(data)
                 }
+
+                data.queries = queries;
 
                 return JSON.stringify(data);
             },
