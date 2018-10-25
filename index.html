@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
     <link rel="stylesheet" href="css/sticky-footer-navbar.css">
     <link rel="stylesheet" href="css/style.css">
-    <title>BIPMed Search</title>
+    <title>BraVE - BIPMed</title>
 </head>
 <body>
 
@@ -22,7 +22,8 @@
         <div id="search-content" class="row justify-content-md-center">
             <div class="col-md-10">
                 <div class="form-group">
-                    <textarea class="form-control form-control-lg" id="queries" aria-label="Queries" rows="1"></textarea>
+                    <label for="queries" class="sr-only">Queries</label>
+                    <textarea class="form-control form-control-lg" id="queries" rows="1"></textarea>
                     <small class="form-text text-muted">
                         Examples: gene symbol (<a href="index.html?queries=SCN1A">SCN1A</a>),
                         genomic range (<a href="index.html?queries=1:65000-70000">1:65000-70000</a>),
