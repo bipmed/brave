@@ -19,90 +19,53 @@
 </header>
 
 <main role="main" class="container-fluid">
-    <form action="index.html" method="get">
+    <form action="index.html" method="get" id="search-form">
         <div id="search-content" class="row justify-content-md-center">
-            <div class="col-md-10" id="basic">
-                <div class="input-group input-group-lg">
-                    <input type="text" name="query" id="query" class="form-control"
-                           aria-label="Query" autofocus placeholder="Query">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary" id="search-button">Search Variants</button>
-                    </div>
-                </div>
-                <small class="form-text text-muted">
-                    Examples: gene symbol (<a href="index.html?query=SCN1A">SCN1A</a>),
-                    genomic range (<a href="index.html?query=1:65000-70000">1:65000-70000</a>),
-                    genomic position (<a href="index.html?query=1:7737651">1:7737651</a>)
-                    or dbSNP ID (<a href="index.html?query=rs35735053">rs35735053</a>).
-                    <!--<a href="#" class="badge badge-primary" id="toggle-advanced">Advanced Search</a>-->
-                </small>
-            </div>
-            <div class="col-md-10" id="advanced" style="display: none">
+            <div class="col-md-10">
                 <div class="form-group">
-                    <textarea class="form-control form-control-lg" id="queries" rows="5" placeholder="Queries"></textarea>
-                </div>
-                <div class="form-row">
-                    <div class="col">
-                        <select class="form-control form-control-lg">
-                            <option selected>Exclude</option>
-                            <option>Include</option>
-                        </select>
-                    </div>
-                    <div class="col">
-                        <select class="form-control form-control-lg">
-                            <option selected>variants with Frequency greater than</option>
-                            <option>variants with Frequency less than</option>
-                        </select>
-                    </div>
-                    <div class="col">
-                        <input type="number" value="0.01" class="form-control form-control-lg">
-                    </div>
-                </div>
-                <div>
+                    <textarea class="form-control form-control-lg" name="queries" id="queries" rows="1"></textarea>
                     <small class="form-text text-muted">
-                        Examples: <a href="">gene symbols</a>,
-                        <a href="">genomic ranges</a>,
-                        <a href="">genomic positions</a>,
-                        <a href="">dbSNP IDs</a>,
-                        or <a href="">mixed</a>.
-                        <a href="#" class="badge badge-primary" id="toggle-basic">Basic Search</a>
+                        Examples: gene symbol (<a href="index.html?queries=SCN1A">SCN1A</a>),
+                        genomic range (<a href="index.html?queries=1:65000-70000">1:65000-70000</a>),
+                        genomic position (<a href="index.html?queries=1:7737651">1:7737651</a>),
+                        dbSNP ID (<a href="index.html?queries=rs35735053">rs35735053</a>)
+                        or <a href="index.html?queries=SCN1A%2C1:65000-70000%2C1:7737651%2Crs35735053">mixed</a>.
                     </small>
                 </div>
                 <div class="float-right">
-                    <button type="submit" class="btn btn-primary btn-lg">Search Variants</button>
+                    <button type="submit" class="btn btn-primary btn-lg" id="search-variants">Search Variants</button>
                 </div>
             </div>
         </div>
     </form>
-    <main role="main" class="container-fluid">
-        <div id="result-content" class="row">
-            <div class="col-md-12">
-                <table id="result-table" class="table table-bordered table-hover nowrap" style="width:100%">
-                    <thead>
-                    <tr>
-                        <th>Chromosome</th>
-                        <th>Position</th>
-                        <th>Reference</th>
-                        <th>Alternative</th>
-                        <th>Gene</th>
-                        <th>dbSNP</th>
-                        <th>Samples</th>
-                        <th>Frequency</th>
 
-                        <th>Clinical Significance</th>
+    <div id="result-content" class="row">
+        <div class="col-md-12">
+            <table id="result-table" class="table table-bordered table-hover nowrap" style="width:100%">
+                <thead>
+                <tr>
+                    <th>Chromosome</th>
+                    <th>Position</th>
+                    <th>Reference</th>
+                    <th>Alternative</th>
+                    <th>Gene</th>
+                    <th>dbSNP</th>
+                    <th>Samples</th>
+                    <th>Frequency</th>
 
-                        <th>Coverage</th>
-                        <th>Genotype Quality</th>
+                    <th>Clinical Significance</th>
 
-                        <th>Assembly</th>
-                        <th>Dataset</th>
-                    </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
+                    <th>Coverage</th>
+                    <th>Genotype Quality</th>
+
+                    <th>Assembly</th>
+                    <th>Dataset</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
-    </main>
+    </div>
 </main>
 
 <footer class="footer">
@@ -116,7 +79,6 @@
 <script type="text/javascript" src="DataTables/datatables.min.js"></script>
 <script src="js/jquery.query-object.js"></script>
 <script src="js/search.js"></script>
-<script src="js/search-modes.js"></script>
 
 </body>
 </html>

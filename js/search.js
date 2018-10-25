@@ -1,7 +1,7 @@
 function getBadge(value) {
     switch (value) {
         case "0":
-            return '<span class="badge badge-pill uncertain-significance">Uncertain significance</span>';
+            return '<span class="badge badge-pill uncertain-significance">Uncertain</span>';
         case "1":
             return '<span class="badge badge-pill not-provided">Not provided</span>';
         case "2":
@@ -19,14 +19,40 @@ function getBadge(value) {
         case "255" :
             return '<span class="badge badge-pill other">Other</span>';
     }
-    return "";
+    return '<span class="badge badge-pill other">?</span>';
+}
+
+function getQuery(query) {
+    let data = {};
+
+    if (/^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*-\s*(\d+)\s*$/.test(query)) {
+        const regexResult = /^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*-\s*(\d+)\s*$/.exec(query);
+        data.referenceName = regexResult[1];
+        data.start = regexResult[2];
+        data.end = regexResult[3];
+    } else if (/^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*$/.test(query)) {
+        const regexResult = /^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*$/.exec(query);
+        data.referenceName = regexResult[1];
+        data.start = regexResult[2];
+    } else if (/^\s*(rs\d+)\s*$/.test(query)) {
+        data.snpId = /^\s*(rs\d+)\s*$/.exec(query)[1].toLowerCase();
+    } else if (/^\s*([A-Za-z0-9]+)\s*$/.test(query)) {
+        data.geneSymbol = /^\s*([A-Za-z0-9]+)\s*$/.exec(query)[1].toUpperCase();
+    } else {
+        return null;
+    }
+
+    return data;
 }
 
 $(document).ready(function () {
-    const query = $.query.get('query');
+    let queries = $.query.get('queries').split(",");
 
-    if (query !== true) {
-        $("#query").val(query);
+    if (queries !== true) {
+        $("#queries").val(queries.join('\n'));
+        $("#queries").attr("rows", queries.length);
+    } else {
+        queries = ""
     }
 
     const table = $('#result-table').DataTable({
@@ -39,34 +65,14 @@ $(document).ready(function () {
             url: "https://bcbcloud.fcm.unicamp.br/bipmed/datatables",
             type: "POST",
             data: function (data) {
-                const query = $("#query").val();
+                data.queries = [];
 
-                let queries = [{
-                    referenceName: null,
-                    start: null,
-                    end: null,
-                    snpId: null,
-                    geneSymbol: null
-                }];
-
-                if (/^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*-\s*(\d+)\s*$/.test(query)) {
-                    const regexResult = /^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*-\s*(\d+)\s*$/.exec(query);
-                    queries[0].referenceName = regexResult[1];
-                    queries[0].start = regexResult[2];
-                    queries[0].end = regexResult[3];
-                } else if (/^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*$/.test(query)) {
-                    const regexResult = /^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*$/.exec(query);
-                    queries[0].referenceName = regexResult[1];
-                    queries[0].start = regexResult[2];
-                } else if (/^\s*(rs\d+)\s*$/.test(query)) {
-                    queries[0].snpId = /^\s*(rs\d+)\s*$/.exec(query)[1].toLowerCase();
-                } else if (/^\s*([A-Za-z0-9]+)\s*$/.test(query)) {
-                    queries[0].geneSymbol = /^\s*([A-Za-z0-9]+)\s*$/.exec(query)[1].toUpperCase();
-                } else {
-                    return JSON.stringify(data)
+                for (let i = 0; i < queries.length; i++) {
+                    const query = getQuery(queries[i]);
+                    if (query !== null) {
+                        data.queries[i] = query
+                    }
                 }
-
-                data.queries = queries;
 
                 return JSON.stringify(data);
             },
@@ -128,4 +134,19 @@ $(document).ready(function () {
     });
 
     new $.fn.dataTable.FixedHeader(table);
+
+    $('#queries').keypress(function (e) {
+        if (e.keyCode === 13 && event.shiftKey) {
+            $('#search-button').click();
+        }
+    });
+
+    $("#search-form").submit(function() {
+       $("#queries").val($("#queries").val().trim().replace(/\r\n|\r|\n/g, ','))
+    });
+
+    $('#queries').keyup(function() {
+        $(this).css({'height': 'auto'});
+        $(this).height( this.scrollHeight );
+    });
 });
