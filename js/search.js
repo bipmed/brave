@@ -88,7 +88,7 @@ $(document).ready(function () {
             {data: 'alternateBases'},
             {data: 'geneSymbol'},
             {data: 'snpIds'},
-            {data: 'sampleCount'},
+            {data: 'totalSamples'},
             {
                 data: 'alleleFrequency',
                 render: function (data) {
