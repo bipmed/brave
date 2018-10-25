@@ -19,11 +19,10 @@
 </header>
 
 <main role="main" class="container-fluid">
-    <form action="index.html" method="get" id="search-form">
         <div id="search-content" class="row justify-content-md-center">
             <div class="col-md-10">
                 <div class="form-group">
-                    <textarea class="form-control form-control-lg" name="queries" id="queries" rows="1"></textarea>
+                    <textarea class="form-control form-control-lg" id="queries" aria-label="Queries" rows="1"></textarea>
                     <small class="form-text text-muted">
                         Examples: gene symbol (<a href="index.html?queries=SCN1A">SCN1A</a>),
                         genomic range (<a href="index.html?queries=1:65000-70000">1:65000-70000</a>),
@@ -33,11 +32,10 @@
                     </small>
                 </div>
                 <div class="float-right">
-                    <button type="submit" class="btn btn-primary btn-lg" id="search-variants">Search Variants</button>
+                    <button type="submit" class="btn btn-primary btn-lg" id="search-button">Search Variants</button>
                 </div>
             </div>
         </div>
-    </form>
 
     <div id="result-content" class="row">
         <div class="col-md-12">

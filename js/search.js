@@ -46,13 +46,11 @@ function getQuery(query) {
 }
 
 $(document).ready(function () {
-    let queries = $.query.get('queries').split(",");
+    let queries = $.query.get('queries');
 
-    if (queries !== true) {
-        $("#queries").val(queries.join('\n'));
-        $("#queries").attr("rows", queries.length);
-    } else {
-        queries = ""
+    if (queries !== "" && queries !== true) {
+        queries = queries.split(',');
+        $("#queries").val(queries.join('\n')).attr("rows", queries.length);
     }
 
     const table = $('#result-table').DataTable({
@@ -135,18 +133,16 @@ $(document).ready(function () {
 
     new $.fn.dataTable.FixedHeader(table);
 
-    $('#queries').keypress(function (e) {
-        if (e.keyCode === 13 && event.shiftKey) {
+    $('#queries').keypress(function (event) {
+        if (event.keyCode === 13 && event.shiftKey) {
             $('#search-button').click();
         }
-    });
-
-    $("#search-form").submit(function() {
-       $("#queries").val($("#queries").val().trim().replace(/\r\n|\r|\n/g, ','))
-    });
-
-    $('#queries').keyup(function() {
+    }).keyup(function () {
         $(this).css({'height': 'auto'});
-        $(this).height( this.scrollHeight );
+        $(this).height(this.scrollHeight);
+    });
+
+    $("#search-button").click(function () {
+        window.location.search = $.query.set("queries", $("#queries").val().trim().replace(/\r\n|\r|\n/g, ','));
     });
 });
