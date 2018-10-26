@@ -128,6 +128,9 @@ $(document).ready(function () {
             processing: "Searching for variants..",
             info: "Showing _START_ to _END_ of _TOTAL_ variants",
             infoFiltered: "(filtered from _MAX_ total variants)"
+        },
+        oLanguage: {
+            sLengthMenu: "Show _MENU_ variants"
         }
     });
 
