@@ -50,18 +50,3 @@ div.container {
     color: white;
     background-color: black;
 }
-
-#mascot {
-    opacity: 0.5;
-    filter: alpha(opacity=50);
-    filter: grayscale();
-    -webkit-filter: grayscale(1);
-    -webkit-transition: all .8s ease-in-out;
-}
-
-#mascot:hover {
-    opacity: 1;
-    filter: none;
-    -webkit-filter: grayscale(0);
-    -webkit-transform: scale(1.01);
-}
