@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
+    <link rel="stylesheet" href="css/sticky-footer-navbar.css">
+    <link rel="stylesheet" href="css/style.css">
+    <title>BraVE - BIPMed</title>
+</head>
+<body>
+
+<header>
+    <nav class="navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand" href="index.html">
+            <img src="image/bipmed-logo2.png" class="d-inline-block align-top" alt="">
+            BraVE - BIPMed Variant Explorer
+        </a>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><span class="navbar-text"><a href="help.html">Help</a></span></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <div class="container">
+        <p class="lead"><strong>BraVE</strong> is a web application to explore the BIPMed genomic variant datasets.</p>
+
+        <p>Initially, the table shows the first 10 variants ordered by genomic position. Change the number of showed
+            variants at
+            the top of the table to see more variants at same page (up to 100). At the bottom of the table, use the
+            navigation
+            buttons to move throughout the table.</p>
+
+        <p>The table may show a plus sign at the beginning of each row. It means that your screen couldn’t show all
+            columns.
+            Click on the plus sign to see all columns or zoom out. When available, <code>dbSNP</code> column will
+            present one or
+            more links to <a href="https://www.ncbi.nlm.nih.gov/snp/">NCBI dbSNP</a> database. Some variants may have
+            more than one <code>Alternative</code> allele, in this case they are separated by comma.</p>
+
+        <p>Some variants have clinical characteristic. When available, they are provided on <code>Clinical
+            Significance</code>
+            column. They are many available values:</p>
+
+        <ul>
+            <li><span class="badge badge-pill uncertain-significance">Uncertain</span></li>
+            <li><span class="badge badge-pill not-provided">Not provided</span></li>
+            <li><span class="badge badge-pill benign">Benign</span></li>
+            <li><span class="badge badge-pill likely-benign">Likely benign</span></li>
+            <li><span class="badge badge-pill likely-pathogenic">Likely pathogenic</span></li>
+            <li><span class="badge badge-pill pathogenic">Pathogenic</span></li>
+            <li><span class="badge badge-pill drug-response">Drug response</span></li>
+            <li><span class="badge badge-pill histocompatibility">Histocompatibility</span></li>
+            <li><span class="badge badge-pill other">Other</span></li>
+        </ul>
+
+        <p>You can search for variants by typing or pasting:</p>
+
+        <ul>
+            <li>Gene symbols (<code>SCN1A</code>, <code>BRCA1</code>),</li>
+            <li>Genomic range (<code>1:65000-70000</code>, <code>X:2600000-2800000</code>),</li>
+            <li>Genomic position (<code>1:7737651</code>, <code>5:2747603</code>),</li>
+            <li>dbSNP ID (<code>rs35735053</code>, <code>rs80357323</code>)</li>
+        </ul>
+
+        <p>The search system is case insensitive (<code>scn1a</code> will work) and ignores spaces (<code>1 : 65000 -
+            70000</code> will work too, except for dbSNP IDs). It supports for multiple queries separated by new line or
+            comma.
+            Example: <code>SCN1A,1:65000-70000,1:7737651,rs35735053</code>. The <kbd>Shift</kbd>+<kbd>Enter</kbd>
+            is a key binding for <code>Search Variants</code> button. Search results can be shared by copying the URL.
+            For
+            example:
+            <a href="http://bipmed.org/brave/index.html?queries=SCN1A%2C1:65000-70000%2C1:7737651%2Crs35735053">http://bipmed.org/brave/index.html?queries=SCN1A%2C1:65000-70000%2C1:7737651%2Crs35735053</a>.
+        </p>
+
+        <p>This project is part of the <a href="http://bipmed.org">Brazilian Initiative on Precision Medicine
+            (BIPMed)</a>
+            and the <a href="http://www.brainn.org.br/en/">Brazilian Institute of Neuroscience and Neurotechnology
+                (BRAINN)</a>
+            institute, developed by the <a href="https://github.com/labbcb">Laboratory of Biostatistics and
+                Computational
+                Biology (BCBLab)</a> with funding from <a href="http://www.fapesp.br/en/">São Paulo Research Foundation
+                (FAPESP)</a>. The source code is available at <a href="https://github.com/bipmed/brave">https://github.com/bipmed/brave</a>.
+        </p>
+
+        <small>You may noticed a small picture of a little monkey at the bottom right of the page. It is a golden lion
+            tamarin (<em>mico-leão-dourado</em> in Portuguese). This monkey is native to the Atlantic coastal forests of
+            Brazil and considered an endangered specie.
+        </small>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container-fluid">
+        <span class="text-muted">
+            &copy; 2018 Benilton Carvalho &amp; Welliton Souza
+        </span>
+        <span class="float-right">
+            <a id="mascot" href="https://en.wikipedia.org/wiki/Golden_lion_tamarin" target="_blank">
+                <img src="image/mascot.jpg" alt="Leontopithecus rosalia" class="rounded">
+            </a>
+        </span>
+    </div>
+</footer>
+</body>
+</html>
