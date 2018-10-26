@@ -54,6 +54,7 @@ div.container {
 #mascot {
     opacity: 0.5;
     filter: alpha(opacity=50);
+    filter: grayscale();
     -webkit-filter: grayscale(1);
     -webkit-transition: all .8s ease-in-out;
 }
