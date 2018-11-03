@@ -12,7 +12,7 @@
 <header>
     <nav class="navbar navbar-expand navbar-dark bg-dark">
         <a class="navbar-brand" href="index.html">
-            <img src="image/bipmed-logo2.png" class="d-inline-block align-top" alt="">
+            <img src="image/mascot.jpg" class="d-inline-block align-top" alt="">
             BraVE - BIPMed Variant Explorer
         </a>
         <ul class="navbar-nav ml-auto">
@@ -26,7 +26,7 @@
         <div class="col-md-10">
             <div class="form-group">
                 <label for="queries" class="sr-only">Queries</label>
-                <textarea class="form-control form-control-lg" id="queries" rows="1"></textarea>
+                <textarea class="form-control" id="queries" rows="3"></textarea>
                 <small class="form-text text-muted">
                     Examples: gene symbol (<a href="index.html?queries=SCN1A">SCN1A</a>),
                     genomic range (<a href="index.html?queries=1:65000-70000">1:65000-70000</a>),
@@ -36,7 +36,7 @@
                 </small>
             </div>
             <div class="float-right">
-                <button type="submit" class="btn btn-primary btn-lg" id="search-button">Search Variants</button>
+                <button type="submit" class="btn btn-primary" id="search-button">Search Variants</button>
             </div>
         </div>
     </div>
@@ -80,6 +80,7 @@
 
 <script type="text/javascript" src="DataTables/datatables.min.js"></script>
 <script src="js/jquery.query-object.js"></script>
+<script src="js/jquery.sparkline.min.js"></script>
 <script src="js/search.js"></script>
 
 </body>

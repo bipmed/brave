@@ -50,7 +50,7 @@ $(document).ready(function () {
 
     if (queries !== "" && queries !== true) {
         queries = queries.split(',');
-        $("#queries").val(queries.join('\n')).attr("rows", queries.length);
+        $("#queries").val(queries.join('\n'));
     }
 
     const table = $('#result-table').DataTable({
@@ -110,13 +110,13 @@ $(document).ready(function () {
             {
                 data: 'coverage',
                 render: function (data) {
-                    return `min: ${data.min.toFixed(4)}, q25: ${data.q25.toFixed(4)}, median: ${data.median.toFixed(4)}, q75: ${data.q75.toFixed(4)}, max: ${data.max.toFixed(4)}, average: ${data.mean.toFixed(4)},`;
+                    return `<span class="sparklines">${data.min},${data.q25},${data.median},${data.q75},${data.max}</span>`;
                 }
             },
             {
                 data: 'genotypeQuality',
                 render: function (data) {
-                    return `min: ${data.min.toFixed(4)}, q25: ${data.q25.toFixed(4)}, median: ${data.median.toFixed(4)}, q75: ${data.q75.toFixed(4)}, max: ${data.max.toFixed(4)}, average: ${data.mean.toFixed(4)}`;
+                    return `<span class="sparklines">${data.min},${data.q25},${data.median},${data.q75},${data.max}</span>`;
                 }
             },
 
@@ -131,6 +131,13 @@ $(document).ready(function () {
         },
         oLanguage: {
             sLengthMenu: "Show _MENU_ variants"
+        },
+        drawCallback: function () {
+            $('.sparklines').sparkline('html', {
+                type: "box",
+                tooltipFormatFieldlist: ['lw', 'lq', 'med', 'uq', 'rw'],
+                raw: true
+            });
         }
     });
 
@@ -140,9 +147,6 @@ $(document).ready(function () {
         if (event.keyCode === 13 && event.shiftKey) {
             $('#search-button').click();
         }
-    }).keyup(function () {
-        $(this).css({'height': 'auto'});
-        $(this).height(this.scrollHeight);
     });
 
     $("#search-button").click(function () {
