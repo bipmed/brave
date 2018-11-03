@@ -57,7 +57,7 @@ $(document).ready(function () {
         serverSide: true,
         processing: true,
         ordering: false,
-        responsive: true,
+        scrollX: true,
         searching: false,
         ajax: {
             url: "https://bcbcloud.fcm.unicamp.br/bipmed/datatables",
@@ -140,8 +140,6 @@ $(document).ready(function () {
             });
         }
     });
-
-    new $.fn.dataTable.FixedHeader(table);
 
     $('#queries').keypress(function (event) {
         if (event.keyCode === 13 && event.shiftKey) {
