@@ -22,6 +22,14 @@ function getBadge(value) {
     return '<span class="badge badge-pill other">?</span>';
 }
 
+function dbSNP(value) {
+    if (value.startsWith("rs")) {
+        return `<a target='_blank' href='https://www.ncbi.nlm.nih.gov/snp/${value}'>${value}</a>`
+    } else {
+        return value
+    }
+}
+
 function getQuery(query) {
     let data = {};
 
@@ -60,7 +68,8 @@ $(document).ready(function () {
         scrollX: true,
         searching: false,
         ajax: {
-            url: "https://bcbcloud.fcm.unicamp.br/bipmed/datatables",
+            //url: "https://bcbcloud.fcm.unicamp.br/brave/search",
+            url: "http://localhost:8080/search",
             type: "POST",
             data: function (data) {
                 data.queries = [];
@@ -87,7 +96,12 @@ $(document).ready(function () {
             {data: 'referenceBases'},
             {data: 'alternateBases'},
             {data: 'geneSymbol'},
-            {data: 'snpIds'},
+            {
+                data: 'snpIds',
+                render: function (data) {
+                    return data.map(id => dbSNP(id))
+                }
+            },
             {data: 'totalSamples'},
             {
                 data: 'alleleFrequency',
