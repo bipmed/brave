@@ -104,7 +104,11 @@ $(document).ready(function () {
             {
                 data: 'snpIds',
                 render: function (data) {
-                    return data.map(id => dbSNP(id))
+                    if (data.length > 0) {
+                        return data.map(id => dbSNP(id));
+                    } else {
+                        return "-";
+                    }
                 }
             },
             {data: 'totalSamples'},
