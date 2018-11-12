@@ -61,14 +61,15 @@ $(document).ready(function () {
         $("#queries").val(queries.join('\n'));
     }
 
-    const table = $('#result-table').DataTable({
+    $('#result-table').DataTable({
         serverSide: true,
         processing: true,
         ordering: false,
         scrollX: true,
         searching: false,
         ajax: {
-            url: "https://bcbcloud.fcm.unicamp.br/brave/search",
+            //url: "https://bcbcloud.fcm.unicamp.br/brave/search",
+            url: "http://localhost:8080/search",
             type: "POST",
             data: function (data) {
                 data.queries = [];
@@ -94,7 +95,12 @@ $(document).ready(function () {
             {data: 'start'},
             {data: 'referenceBases'},
             {data: 'alternateBases'},
-            {data: 'geneSymbol'},
+            {
+                data: 'geneSymbol',
+                render: function (data) {
+                    return Array.from(new Set(data));
+                }
+            },
             {
                 data: 'snpIds',
                 render: function (data) {
