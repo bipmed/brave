@@ -96,12 +96,6 @@ $(document).ready(function () {
             {data: 'referenceBases'},
             {data: 'alternateBases'},
             {
-                data: 'geneSymbol',
-                render: function (data) {
-                    return Array.from(new Set(data)).join('<br/>');
-                }
-            },
-            {
                 data: 'snpIds',
                 render: function (data) {
                     if (data.length > 0) {
@@ -111,7 +105,6 @@ $(document).ready(function () {
                     }
                 }
             },
-            {data: 'totalSamples'},
             {
                 data: 'alleleFrequency',
                 render: function (data) {
@@ -119,6 +112,18 @@ $(document).ready(function () {
                 }
             },
 
+            {
+                data: 'geneSymbol',
+                render: function (data) {
+                    return Array.from(new Set(data)).join('<br/>');
+                }
+            },
+            {
+                data: 'hgvs',
+                render: function (data) {
+                    return Array.from(new Set(data)).join('<br/>');
+                }
+            },
             {
                 data: 'clnsig',
                 render: function (data) {
@@ -128,6 +133,7 @@ $(document).ready(function () {
                     }
                 }
             },
+
             {
                 data: 'coverage',
                 render: function (data) {
@@ -142,6 +148,7 @@ $(document).ready(function () {
             },
 
             {data: 'datasetId'},
+            {data: 'totalSamples'},
             {data: 'assemblyId'}
         ],
         language: {
