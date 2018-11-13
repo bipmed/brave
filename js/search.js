@@ -122,12 +122,10 @@ $(document).ready(function () {
             {
                 data: 'clnsig',
                 render: function (data) {
-                    let regex = /(\d+)/;
-                    let res = data;
-                    while (regex.test(res)) {
-                        res = res.replace(regex, getBadge(regex.exec(res)[1]));
+                    if (data !== null) {
+                        let res = data.match(/(\d+)/g);
+                        return Array.from(new Set(res)).map(x => getBadge(x)).join('<br/>');
                     }
-                    return res;
                 }
             },
             {
