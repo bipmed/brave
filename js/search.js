@@ -44,8 +44,8 @@ function getQuery(query) {
         data.start = regexResult[2];
     } else if (/^\s*(rs\d+)\s*$/.test(query)) {
         data.snpId = /^\s*(rs\d+)\s*$/.exec(query)[1].toLowerCase();
-    } else if (/^\s*([A-Za-z0-9]+)\s*$/.test(query)) {
-        data.geneSymbol = /^\s*([A-Za-z0-9]+)\s*$/.exec(query)[1].toUpperCase();
+    } else if (/^\s*([A-Za-z0-9\-]+)\s*$/.test(query)) {
+        data.geneSymbol = /^\s*([A-Za-z0-9\-]+)\s*$/.exec(query)[1].toUpperCase();
     } else {
         return null;
     }
