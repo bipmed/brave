@@ -143,8 +143,8 @@ $(document).ready(function () {
                 }
             },
 
-            {data: 'assemblyId'},
-            {data: 'datasetId'}
+            {data: 'datasetId'},
+            {data: 'assemblyId'}
         ],
         language: {
             zeroRecords: "No variant found.",
