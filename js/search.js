@@ -98,14 +98,14 @@ $(document).ready(function () {
             {
                 data: 'geneSymbol',
                 render: function (data) {
-                    return Array.from(new Set(data));
+                    return Array.from(new Set(data)).join('<br/>');
                 }
             },
             {
                 data: 'snpIds',
                 render: function (data) {
                     if (data.length > 0) {
-                        return data.map(id => dbSNP(id));
+                        return data.map(id => dbSNP(id)).join('<br/>');
                     } else {
                         return "-";
                     }
