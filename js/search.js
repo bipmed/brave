@@ -129,7 +129,7 @@ $(document).ready(function () {
                 render: function (data) {
                     if (data !== null) {
                         let res = data.match(/(\d+)/g);
-                        return Array.from(new Set(res)).map(x => getBadge(x)).join('<br/>');
+                        return Array.from(new Set(res)).map(x => getBadge(x)).join(' ');
                     }
                 }
             },
