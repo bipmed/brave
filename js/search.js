@@ -152,11 +152,11 @@ $(document).ready(function () {
         ],
         language: {
             zeroRecords: "No variant found.",
+            emptyTable: "No dataset available.",
             processing: "Searching for variants..",
             info: "Showing _START_ to _END_ of _TOTAL_ variants",
-            infoFiltered: "(filtered from _MAX_ total variants)"
-        },
-        oLanguage: {
+            infoFiltered: "(filtered from _MAX_ total variants)",
+            infoEmpty: "No variants to show",
             sLengthMenu: "Show _MENU_ variants"
         },
         drawCallback: function () {
