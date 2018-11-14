@@ -68,8 +68,7 @@ $(document).ready(function () {
         scrollX: true,
         searching: false,
         ajax: {
-            //url: "https://bcbcloud.fcm.unicamp.br/brave/search",
-            url: "http://localhost:8080/search",
+            url: "https://bcbcloud.fcm.unicamp.br/brave/search",
             type: "POST",
             data: function (data) {
                 data.queries = [];
