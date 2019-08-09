@@ -84,7 +84,7 @@ $(document).ready(function () {
             },
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            error: function() {
+            error: function () {
                 $('#result-table_processing').html('Server offline.');
             }
         },
@@ -96,11 +96,20 @@ $(document).ready(function () {
             {data: 'referenceName'},
             {data: 'start'},
             {data: 'referenceBases'},
-            {data: 'alternateBases'},
+            {
+                data: 'alternateBases',
+                render: function (data) {
+                    if (typeof data !== 'undefined' && data.length > 0) {
+                        return data;
+                    } else {
+                        return "-";
+                    }
+                }
+            },
             {
                 data: 'snpIds',
                 render: function (data) {
-                    if (data.length > 0) {
+                    if (typeof data !== 'undefined' && data.length > 0) {
                         return data.map(id => dbSNP(id)).join('<br/>');
                     } else {
                         return "-";
@@ -108,30 +117,44 @@ $(document).ready(function () {
                 }
             },
             {
-                data: 'alleleFrequency',
+                data: 'alleleFrequencies',
                 render: function (data) {
-                    return data.map(x => x.toFixed(4));
+                    if (typeof data !== 'undefined' && data.length > 0) {
+                        return data.map(x => x.toFixed(4));
+                    } else {
+                        return "-";
+                    }
                 }
             },
 
             {
-                data: 'geneSymbol',
+                data: 'geneSymbols',
                 render: function (data) {
-                    return Array.from(new Set(data)).join('<br/>');
+                    if (typeof data !== 'undefined' && data.length > 0) {
+                        return Array.from(new Set(data)).join('<br/>');
+                    } else {
+                        return "-";
+                    }
                 }
             },
             {
                 data: 'hgvs',
                 render: function (data) {
-                    return Array.from(new Set(data)).join('<br/>');
+                    if (typeof data !== 'undefined' && data.length > 0) {
+                        return Array.from(new Set(data)).join('<br/>');
+                    } else {
+                        return "-";
+                    }
                 }
             },
             {
                 data: 'clnsig',
                 render: function (data) {
-                    if (data !== null) {
+                    if (typeof data !== 'undefined' && data !== null) {
                         let res = data.match(/(\d+)/g);
                         return Array.from(new Set(res)).map(x => getBadge(x)).join(' ');
+                    } else {
+                        return "-";
                     }
                 }
             },
@@ -149,7 +172,7 @@ $(document).ready(function () {
                 }
             },
 
-            {data: 'datasetId'},
+            {data: 'callSetId'},
             {data: 'totalSamples'},
             {data: 'assemblyId'}
         ],
