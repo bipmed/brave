@@ -34,7 +34,7 @@ The search system is case insensitive (`scn1a` will work) and ignores spaces (`1
 It supports for multiple queries separated by new line or comma.
 Example: `SCN1A,1:65000-70000,1:7737651,rs35735053`. The <kbd>Shift</kbd>+<kbd>Enter</kbd> is a key binding for `Search Variants` button.
 Search results can be shared by copying the URL.
-For example: [http://bipmed.org/brave/index.html?queries=SCN1A%2C1:65000-70000%2C1:7737651%2Crs35735053](http://bipmed.org/brave/index.html?queries=SCN1A%2C1:65000-70000%2C1:7737651%2Crs35735053].
+For example: http://bipmed.org/brave/index.html?queries=SCN1A%2C1:65000-70000%2C1:7737651%2Crs35735053.
 
 This project is part of the [Brazilian Initiative on Precision Medicine (BIPMed)](http://bipmed.org).
 and the [Brazilian Institute of Neuroscience and Neurotechnology (BRAINN)](http://www.brainn.org.br/en/) institute,
