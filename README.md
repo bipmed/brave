@@ -4,9 +4,6 @@ Initially, the table shows the first 10 variants ordered by genomic position.
 Change the number of showed variants at the top of the table to see more variants at same page (up to 100).
 At the bottom of the table, use the navigation buttons to move throughout the table.
 
-The table may show a plus sign at the beginning of each row.
-It means that your screen could not show all columns.
-Click on the plus sign to see all columns or zoom out.
 When available, `dbSNP` column will present one or more links to [NCBI dbSNP](https://www.ncbi.nlm.nih.gov/snp/) database.
 Some variants may have more than one `Alternative` allele, in this case they are separated by comma.
 
