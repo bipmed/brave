@@ -36,12 +36,12 @@ function getQuery(query) {
     if (/^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*-\s*(\d+)\s*$/.test(query)) {
         const regexResult = /^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*-\s*(\d+)\s*$/.exec(query);
         data.referenceName = regexResult[1];
-        data.start = regexResult[2];
-        data.end = regexResult[3];
+        data.start = parseInt(regexResult[2]);
+        data.end = parseInt(regexResult[3]);
     } else if (/^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*$/.test(query)) {
         const regexResult = /^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*$/.exec(query);
         data.referenceName = regexResult[1];
-        data.start = regexResult[2];
+        data.start = parseInt(regexResult[2]);
     } else if (/^\s*(rs\d+)\s*$/.test(query)) {
         data.snpId = /^\s*(rs\d+)\s*$/.exec(query)[1].toLowerCase();
     } else if (/^\s*([A-Za-z0-9\-]+)\s*$/.test(query)) {
@@ -84,7 +84,7 @@ $(document).ready(function () {
             },
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            error: function() {
+            error: function () {
                 $('#result-table_processing').html('Server offline.');
             }
         },
@@ -96,11 +96,20 @@ $(document).ready(function () {
             {data: 'referenceName'},
             {data: 'start'},
             {data: 'referenceBases'},
-            {data: 'alternateBases'},
+            {
+                data: 'alternateBases',
+                render: function (data) {
+                    if (data !== undefined) {
+                        return data;
+                    } else {
+                        return "-";
+                    }
+                }
+            },
             {
                 data: 'snpIds',
                 render: function (data) {
-                    if (data.length > 0) {
+                    if (data !== undefined) {
                         return data.map(id => dbSNP(id)).join('<br/>');
                     } else {
                         return "-";
@@ -110,28 +119,42 @@ $(document).ready(function () {
             {
                 data: 'alleleFrequency',
                 render: function (data) {
-                    return data.map(x => x.toFixed(4));
+                    if (data !== undefined) {
+                        return data.map(x => x.toFixed(4));
+                    } else {
+                        return "-";
+                    }
                 }
             },
 
             {
                 data: 'geneSymbol',
                 render: function (data) {
-                    return Array.from(new Set(data)).join('<br/>');
+                    if (data !== undefined) {
+                        return Array.from(new Set(data)).join('<br/>');
+                    } else {
+                        return "-";
+                    }
                 }
             },
             {
                 data: 'hgvs',
                 render: function (data) {
-                    return Array.from(new Set(data)).join('<br/>');
+                    if (data !== undefined) {
+                        return Array.from(new Set(data)).join('<br/>');
+                    } else {
+                        return "-";
+                    }
                 }
             },
             {
                 data: 'clnsig',
                 render: function (data) {
-                    if (data !== null) {
+                    if (data !== undefined) {
                         let res = data.match(/(\d+)/g);
                         return Array.from(new Set(res)).map(x => getBadge(x)).join(' ');
+                    } else {
+                        return "-";
                     }
                 }
             },
