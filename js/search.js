@@ -36,12 +36,12 @@ function getQuery(query) {
     if (/^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*-\s*(\d+)\s*$/.test(query)) {
         const regexResult = /^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*-\s*(\d+)\s*$/.exec(query);
         data.referenceName = regexResult[1];
-        data.start = regexResult[2];
-        data.end = regexResult[3];
+        data.start = parseInt(regexResult[2]);
+        data.end = parseInt(regexResult[3]);
     } else if (/^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*$/.test(query)) {
         const regexResult = /^\s*([1-9]|1[0-9]|2[0-2]|[XY])\s*:\s*(\d+)\s*$/.exec(query);
         data.referenceName = regexResult[1];
-        data.start = regexResult[2];
+        data.start = parseInt(regexResult[2]);
     } else if (/^\s*(rs\d+)\s*$/.test(query)) {
         data.snpId = /^\s*(rs\d+)\s*$/.exec(query)[1].toLowerCase();
     } else if (/^\s*([A-Za-z0-9\-]+)\s*$/.test(query)) {
@@ -99,7 +99,7 @@ $(document).ready(function () {
             {
                 data: 'alternateBases',
                 render: function (data) {
-                    if (typeof data !== 'undefined' && data.length > 0) {
+                    if (data !== undefined) {
                         return data;
                     } else {
                         return "-";
@@ -109,7 +109,7 @@ $(document).ready(function () {
             {
                 data: 'snpIds',
                 render: function (data) {
-                    if (typeof data !== 'undefined' && data.length > 0) {
+                    if (data !== undefined) {
                         return data.map(id => dbSNP(id)).join('<br/>');
                     } else {
                         return "-";
@@ -117,9 +117,9 @@ $(document).ready(function () {
                 }
             },
             {
-                data: 'alleleFrequencies',
+                data: 'alleleFrequency',
                 render: function (data) {
-                    if (typeof data !== 'undefined' && data.length > 0) {
+                    if (data !== undefined) {
                         return data.map(x => x.toFixed(4));
                     } else {
                         return "-";
@@ -128,9 +128,9 @@ $(document).ready(function () {
             },
 
             {
-                data: 'geneSymbols',
+                data: 'geneSymbol',
                 render: function (data) {
-                    if (typeof data !== 'undefined' && data.length > 0) {
+                    if (data !== undefined) {
                         return Array.from(new Set(data)).join('<br/>');
                     } else {
                         return "-";
@@ -140,7 +140,7 @@ $(document).ready(function () {
             {
                 data: 'hgvs',
                 render: function (data) {
-                    if (typeof data !== 'undefined' && data.length > 0) {
+                    if (data !== undefined) {
                         return Array.from(new Set(data)).join('<br/>');
                     } else {
                         return "-";
@@ -150,7 +150,7 @@ $(document).ready(function () {
             {
                 data: 'clnsig',
                 render: function (data) {
-                    if (typeof data !== 'undefined' && data !== null) {
+                    if (data !== undefined) {
                         let res = data.match(/(\d+)/g);
                         return Array.from(new Set(res)).map(x => getBadge(x)).join(' ');
                     } else {
@@ -172,7 +172,7 @@ $(document).ready(function () {
                 }
             },
 
-            {data: 'callSetId'},
+            {data: 'datasetId'},
             {data: 'totalSamples'},
             {data: 'assemblyId'}
         ],
