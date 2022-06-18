@@ -56,3 +56,7 @@ div.container {
     -moz-box-sizing: content-box;
     box-sizing: content-box;
 }
+
+label.assembly {
+    background-color: white;
+}

@@ -55,10 +55,17 @@ function getQuery(query) {
 
 $(document).ready(function () {
     let queries = $.query.get('queries');
+    let assembly = $.query.get('assembly');
 
     if (queries !== "" && queries !== true) {
         queries = queries.split(',');
         $("#queries").val(queries.join('\n'));
+    }
+
+    if (assembly !== "") {
+        $("#assembly").val(assembly);
+    } else {
+        assembly = $("#assembly").find(":selected").val();
     }
 
     $('#result-table').DataTable({
@@ -72,12 +79,17 @@ $(document).ready(function () {
             type: "POST",
             data: function (data) {
                 data.queries = [];
-
+                
                 for (let i = 0; i < queries.length; i++) {
-                    const query = getQuery(queries[i]);
+                    let query = getQuery(queries[i]);
                     if (query !== null) {
-                        data.queries[i] = query
+                        query.assemblyId = assembly;
+                        data.queries[i] = query;
                     }
+                }
+                
+                if (data.queries.length === 0) {
+                    data.queries[0] = {assemblyId: assembly};
                 }
 
                 return JSON.stringify(data);
@@ -201,6 +213,8 @@ $(document).ready(function () {
     });
 
     $("#search-button").click(function () {
-        window.location.search = $.query.set("queries", $("#queries").val().trim().replace(/\r\n|\r|\n/g, ','));
+        window.location.search = $.query
+            .set("assembly", $("#assembly").find(":selected").val())
+            .set("queries", $("#queries").val().trim().replace(/\r\n|\r|\n/g, ','));
     });
 });

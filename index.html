@@ -34,6 +34,17 @@
                     or <a href="index.html?queries=SCN1A%2C1:65000-70000%2C1:7737651%2Crs35735053">mixed</a>.
                 </small>
             </div>
+            <div class="float-left">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text assembly" for="assembly">Assembly</label>
+                    </div>
+                    <select class="custom-select", id="assembly">
+                        <option value="GRCh38" selected>GRCh38</option>
+                        <option value="GRCh37">GRCh37</option>
+                    </select>
+                </div>
+            </div>
             <div class="float-right">
                 <button type="submit" class="btn btn-primary" id="search-button">Search Variants</button>
             </div>
@@ -74,7 +85,7 @@
 <footer class="footer">
     <div class="container-fluid">
         <span class="text-muted">
-            &copy; 2018-2019 Benilton Carvalho &amp; Welliton Souza
+            &copy; 2018-2022 BIPMed
         </span>
         <span class="float-right">
             <a target="_blank" href="https://github.com/bipmed/brave/issues">Report issue</a>
