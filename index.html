@@ -98,8 +98,30 @@
 <script src="js/jquery.sparkline.min.js"></script>
 <script src="js/search.js"></script>
 
+<!-- Sort each column of Result.table  -->   
+    <script>
+$(document).ready(function() {
+    $('#result-table').DataTable({
+        "paging": true,       // Enable pagination
+        "searching": true,    // Enable searching
+        "ordering": true,     // Enable sorting
+        "info": true,         // Show information about the table
+        "lengthChange": false // Disable length change option
+    });
+});
+</script>
+    
 <!-- Donwload Bottom  -->
-
+    
+    <style>
+        #downloadButton {
+            position: absolute;
+            bottom: 1px;
+            right: 150px;
+            z-index: 1000;
+        }
+    </style>
+    
     <button id="downloadButton" class="btn btn-primary" style="background-color: #3f9da6; color: #fcfcfc;">Download Data</button>
         <script>
         document.getElementById('downloadButton').addEventListener('click', function() {
