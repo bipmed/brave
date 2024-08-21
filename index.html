@@ -46,7 +46,7 @@
                 </div>
             </div>
             <div class="float-right">
-                <button type="submit" class="btn btn-primary" id="search-button">Search Variants</button>
+                <button type="submit" class="btn btn-primary" id="search-button" style="background-color: #3f9da6; color: #fcfcfc;">Search Variants</button>
             </div>
         </div>
     </div>
@@ -93,6 +93,39 @@
 <script src="js/jquery.query-object.js"></script>
 <script src="js/jquery.sparkline.min.js"></script>
 <script src="js/search.js"></script>
+
+<!-- Donwload Bottom  -->
+    
+<style>
+    #downloadButton {
+        position: absolute;
+        bottom: 1px;
+        right: 150px;
+        z-index: 1000;
+    }
+</style>
+    #downloadButton {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        z-index: 1000;
+    }
+</style>
+    <button id="downloadButton" class="btn btn-primary" style="background-color: #3f9da6; color: #fcfcfc;">Download Data</button>
+        <script>
+        document.getElementById('downloadButton').addEventListener('click', function() {
+            const data = "Your data here";  // Replace this with actual data or logic to fetch the data
+            const blob = new Blob([data], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'data.csv';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        });
+</script>
 
 </body>
 </html>
