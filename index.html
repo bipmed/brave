@@ -51,10 +51,10 @@
         </div>
     </div>
 
-    <div id="result-content" class="row" style="background-color: #e6f7ff;">
+    <div id="result-content" class="row">
         <div class="col-md-12">
             <table id="result-table" class="table table-bordered table-hover nowrap">
-                <thead>
+                <thead style="background-color: #b3e0ff;">
                 <tr>
                     <th>Chr</th>
                     <th>Pos</th>
@@ -104,13 +104,7 @@
         z-index: 1000;
     }
 </style>
-    #downloadButton {
-        position: fixed;
-        bottom: 25px;
-        right: 25px;
-        z-index: 1000;
-    }
-</style>
+
     <button id="downloadButton" class="btn btn-primary" style="background-color: #3f9da6; color: #fcfcfc;">Download Data</button>
         <script>
         document.getElementById('downloadButton').addEventListener('click', function() {
