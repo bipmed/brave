@@ -24,10 +24,4 @@ body {
     /* background-color: #1d405c; */
 }
 
-.downloadButton {
-    position: absolute;
-    bottom: 3px;
-    right: 150px;
-    z-index: 1000;
-}
 
