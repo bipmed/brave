@@ -9,6 +9,7 @@
 </head>
 <body>
 
+<!-- Header -->
 <header>
     <nav class="navbar navbar-expand" style="background-color: #1d405c;">
         <a class="navbar-brand" href="index.html" style="color: #fcfcfc;">
@@ -20,6 +21,7 @@
     </nav>
 </header>
 
+<!-- Search Content -->
 <main role="main" class="container-fluid">
     <div id="search-content" class="row justify-content-md-center">
         <div class="col-md-10">
@@ -50,11 +52,12 @@
             </div>
         </div>
     </div>
-
+    
+<!-- Navbar Result Table -->
     <div id="result-content" class="row">
         <div class="col-md-12">
             <table id="result-table" class="table table-bordered table-hover nowrap">
-                <thead style="background-color: #b3e0ff;">
+                <thead style="background-color: #e1f8fa;">
                 <tr>
                     <th>Chr</th>
                     <th>Pos</th>
@@ -88,22 +91,14 @@
         </span>
     </div>
 </footer>
-
+    
+<!-- Table itself  -->
 <script type="text/javascript" src="DataTables/datatables.min.js"></script>
 <script src="js/jquery.query-object.js"></script>
 <script src="js/jquery.sparkline.min.js"></script>
 <script src="js/search.js"></script>
 
 <!-- Donwload Bottom  -->
-    
-<style>
-    #downloadButton {
-        position: absolute;
-        bottom: 3px;
-        right: 150px;
-        z-index: 1000;
-    }
-</style>
 
     <button id="downloadButton" class="btn btn-primary" style="background-color: #3f9da6; color: #fcfcfc;">Download Data</button>
         <script>
